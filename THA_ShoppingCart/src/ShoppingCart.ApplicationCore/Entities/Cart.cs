@@ -19,8 +19,9 @@ public class Cart : AgregateRoot
         get
         {
             var currencyCode = _items.FirstOrDefault()?.UnitPrice.Currency ?? DEFAULT_CURRENCY;
-            var amount = _items?.Sum(i => i.Quantity * i.UnitPrice.Amount) ?? 0;
-            return new Money(amount, currencyCode);
+            var totalPrice = new Money(0, currencyCode);
+            totalPrice = _items.Aggregate(totalPrice, (acc, i) => acc + i.UnitPrice * i.Quantity);
+            return totalPrice;
         }
     }
 
