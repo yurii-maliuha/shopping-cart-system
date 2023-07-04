@@ -1,30 +1,23 @@
-﻿using AutoFixture;
-using FluentAssertions;
+﻿using FluentAssertions;
 using ShoppingCart.ApplicationCore.Entities;
+using ShoppingCart.ApplicationCore.UnitTests.Shared;
 using Xunit;
 
 namespace ShoppingCart.ApplicationCore.UnitTests;
 
 public class DeleteItemCartTests
 {
-    private Fixture _fixture;
-
-    public DeleteItemCartTests()
-    {
-        _fixture = new Fixture();
-    }
-
     [Fact]
     public void DeleteIgnoreUnexistingItem()
     {
         //Arrange
-        var cartItems = _fixture.CreateMany<CartItem>().ToList();
+        var cartItems = Fixture.CreateMany(3, new CartItemCreator());
         var itemsCount = cartItems.Count;
         var cart = new Cart(
             id: Guid.NewGuid(),
             buyerId: Guid.NewGuid(),
             items: cartItems);
-        var product = _fixture.Create<Product>();
+        var product = Fixture.Create(new ProductCreator());
 
         // Act
         cart.DeleteItem(product);
@@ -38,8 +31,8 @@ public class DeleteItemCartTests
     public void DeleteItem()
     {
         //Arrange
-        var cartItems = _fixture.CreateMany<CartItem>().ToList();
-        var product = _fixture.Create<Product>();
+        var cartItems = Fixture.CreateMany(3, new CartItemCreator());
+        var product = Fixture.Create(new ProductCreator());
         cartItems.Add(new CartItem(
             id: Guid.NewGuid(),
             productId: product.Id,
@@ -51,6 +44,7 @@ public class DeleteItemCartTests
             id: Guid.NewGuid(),
             buyerId: Guid.NewGuid(),
             items: cartItems);
+        var cartTotalPrice = cart.Total;
 
         // Act
         cart.DeleteItem(product);
@@ -59,5 +53,6 @@ public class DeleteItemCartTests
         cart.Items.Should().NotBeNull();
         cart.Items.Count.Should().Be(itemsCount - 1);
         cart.Items.Any(x => x.ProductId == product.Id).Should().BeFalse();
+        cart.Total.Should().Be(cartTotalPrice - (product.Price * 2));
     }
 }

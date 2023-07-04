@@ -1,7 +1,7 @@
-﻿using AutoFixture;
-using FluentAssertions;
+﻿using FluentAssertions;
 using ShoppingCart.ApplicationCore.Entities;
 using ShoppingCart.ApplicationCore.Enums;
+using ShoppingCart.ApplicationCore.UnitTests.Shared;
 using ShoppingCart.ApplicationCore.ValueObjects;
 using Xunit;
 
@@ -9,18 +9,12 @@ namespace ShoppingCart.ApplicationCore.UnitTests;
 
 public class CartItemTests
 {
-    private Fixture _fixture;
-    public CartItemTests()
-    {
-        _fixture = new Fixture();
-    }
-
     [Fact]
     public void CreateBasedOnProductAndQuantity()
     {
         // Arrange
         var id = Guid.NewGuid();
-        var product = _fixture.Create<Product>();
+        var product = Fixture.Create(new ProductCreator());
         var quantity = 2;
 
         // Act

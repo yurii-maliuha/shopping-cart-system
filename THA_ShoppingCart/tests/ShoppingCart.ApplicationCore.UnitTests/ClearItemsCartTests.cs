@@ -1,24 +1,16 @@
-﻿using AutoFixture;
-using FluentAssertions;
-using ShoppingCart.ApplicationCore.Entities;
+﻿using FluentAssertions;
+using ShoppingCart.ApplicationCore.UnitTests.Shared;
 using Xunit;
 
 namespace ShoppingCart.ApplicationCore.UnitTests;
 
 public class ClearItemsCartTests
 {
-    private Fixture _fixture;
-
-    public ClearItemsCartTests()
-    {
-        _fixture = new Fixture();
-    }
-
     [Fact]
     public void ClearCart()
     {
         //Arrange
-        var cart = _fixture.Create<Cart>();
+        var cart = Fixture.Create(new CartCreator());
 
         // Act
         cart.Clear();

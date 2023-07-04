@@ -1,30 +1,23 @@
-﻿using AutoFixture;
-using FluentAssertions;
+﻿using FluentAssertions;
 using ShoppingCart.ApplicationCore.Entities;
 using ShoppingCart.ApplicationCore.Exceptions;
+using ShoppingCart.ApplicationCore.UnitTests.Shared;
 using Xunit;
 
 namespace ShoppingCart.ApplicationCore.UnitTests;
 
 public class RemoveItemCartTests
 {
-    private Fixture _fixture;
-
-    public RemoveItemCartTests()
-    {
-        _fixture = new Fixture();
-    }
-
     [Fact]
     public void RemoveUnexistingItemThrowsException()
     {
         //Arrange
-        var cartItems = _fixture.CreateMany<CartItem>().ToList();
+        var cartItems = Fixture.CreateMany(3, new CartItemCreator());
         var cart = new Cart(
             id: Guid.NewGuid(),
             buyerId: Guid.NewGuid(),
             items: cartItems);
-        var product = _fixture.Create<Product>();
+        var product = Fixture.Create(new ProductCreator());
 
         // Act
         Action action = () => cart.RemoveItem(product);
@@ -37,8 +30,8 @@ public class RemoveItemCartTests
     public void RemoveItemsUpdateQuantity()
     {
         //Arrange
-        var cartItems = _fixture.CreateMany<CartItem>().ToList();
-        var product = _fixture.Create<Product>();
+        var cartItems = Fixture.CreateMany(3, new CartItemCreator());
+        var product = Fixture.Create(new ProductCreator());
         cartItems.Add(new CartItem(
             id: Guid.NewGuid(),
             productId: product.Id,
@@ -50,6 +43,7 @@ public class RemoveItemCartTests
             id: Guid.NewGuid(),
             buyerId: Guid.NewGuid(),
             items: cartItems);
+        var cartTotalPrice = cart.Total;
 
         // Act
         cart.RemoveItem(product, quantity: 1);
@@ -58,6 +52,8 @@ public class RemoveItemCartTests
         cart.Items.Should().NotBeNull();
         cart.Items.Count.Should().Be(itemsCount);
         cart.Items.First(x => x.ProductId == product.Id).Quantity.Should().Be(2);
+        cart.Total.Should().Be(cartTotalPrice - product.Price);
+
 
     }
 
@@ -65,8 +61,8 @@ public class RemoveItemCartTests
     public void RemoveItemCauseToItemDeletion()
     {
         //Arrange
-        var cartItems = _fixture.CreateMany<CartItem>().ToList();
-        var product = _fixture.Create<Product>();
+        var cartItems = Fixture.CreateMany(3, new CartItemCreator());
+        var product = Fixture.Create(new ProductCreator());
         cartItems.Add(new CartItem(
             id: Guid.NewGuid(),
             productId: product.Id,
