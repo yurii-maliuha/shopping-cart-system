@@ -40,23 +40,46 @@ public class Cart : IAgregateRoot
             return;
         }
 
-        var existingItem = Items.First(i => i.ProductId == product.Id);
-        existingItem.AddQuantity(quantity);
+        UpdateItem(product, quantity);
 
-        //TODO publish CartItemUpserted
+        //TODO publish CartItemAdded
     }
 
-    public void RemoveItem(Product product)
+    public void RemoveItem(Product product, int quantity = 1)
     {
-        var itemToRemove = Items.FirstOrDefault(i => i.ProductId == product.Id);
-        if (itemToRemove is null)
+        if (quantity < 1)
+        {
+            throw new ArgumentOutOfRangeException("The quantity parameter should be greater or equal to 1");
+        }
+
+        var itemToRemove = UpdateItem(product, -quantity);
+        if (itemToRemove.Quantity <= 0)
+        {
+            DeleteItem(product);
+        }
+    }
+
+    private CartItem UpdateItem(Product product, int quantity)
+    {
+        var itemToUpdate = Items.FirstOrDefault(i => i.ProductId == product.Id);
+        if (itemToUpdate is null)
         {
             throw new ArgumentNullException("Item can not be undefined for this operation");
         }
 
-        _items.Remove(itemToRemove);
+        itemToUpdate.AddQuantity(quantity);
+        return itemToUpdate;
+    }
 
-        //TODO publish CartItemUpserted
+    public void DeleteItem(Product product)
+    {
+        var itemToDelete = Items.FirstOrDefault(i => i.ProductId == product.Id);
+        if (itemToDelete is not null)
+        {
+            _items.Remove(itemToDelete);
+
+            //TODO publish CartItemDeleted
+        }
     }
 
     public void Clear()

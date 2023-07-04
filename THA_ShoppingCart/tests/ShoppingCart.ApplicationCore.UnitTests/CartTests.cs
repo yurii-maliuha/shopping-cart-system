@@ -33,40 +33,157 @@ public class CartTests
     public void AddNewItem()
     {
         //Arrange
+        var cartItems = _fixture.CreateMany<CartItem>().ToList();
+        var itemsCount = cartItems.Count;
+        var cart = new Cart(
+            buyerId: Guid.NewGuid(),
+            items: cartItems);
+        var product = _fixture.Create<Product>();
 
         // Act
+        cart.AddItem(product);
 
         // Assert
+        cart.Items.Should().NotBeNull();
+        cart.Items.Count.Should().Be(itemsCount + 1);
+        cart.Items.Count(x => x.ProductId == product.Id).Should().Be(1);
     }
 
     [Fact]
     public void AddExistingItem()
     {
         //Arrange
+        var cartItems = _fixture.CreateMany<CartItem>().ToList();
+        var product = _fixture.Create<Product>();
+        cartItems.Add(new CartItem(
+            productId: product.Id,
+            unitPrice: product.Price,
+            quantity: 1));
+
+        var itemsCount = cartItems.Count;
+        var cart = new Cart(
+            buyerId: Guid.NewGuid(),
+            items: cartItems);
 
         // Act
+        cart.AddItem(product);
 
         // Assert
+        cart.Items.Should().NotBeNull();
+        cart.Items.Count.Should().Be(itemsCount);
+        cart.Items.First(x => x.ProductId == product.Id).Quantity.Should().Be(2);
     }
 
     [Fact]
     public void RemoveUnexistingItemThrowsException()
     {
         //Arrange
+        var cartItems = _fixture.CreateMany<CartItem>().ToList();
+        var cart = new Cart(
+            buyerId: Guid.NewGuid(),
+            items: cartItems);
+        var product = _fixture.Create<Product>();
 
         // Act
+        Action action = () => cart.RemoveItem(product);
 
         // Assert
+        action.Should().Throw<ArgumentNullException>();
     }
 
     [Fact]
-    public void RemoveItem()
+    public void RemoveItemsUpdateQuantity()
     {
         //Arrange
+        var cartItems = _fixture.CreateMany<CartItem>().ToList();
+        var product = _fixture.Create<Product>();
+        cartItems.Add(new CartItem(
+            productId: product.Id,
+            unitPrice: product.Price,
+            quantity: 3));
+
+        var itemsCount = cartItems.Count;
+        var cart = new Cart(
+            buyerId: Guid.NewGuid(),
+            items: cartItems);
 
         // Act
+        cart.RemoveItem(product, quantity: 1);
 
         // Assert
+        cart.Items.Should().NotBeNull();
+        cart.Items.Count.Should().Be(itemsCount);
+        cart.Items.First(x => x.ProductId == product.Id).Quantity.Should().Be(2);
+
+    }
+
+    [Fact]
+    public void RemoveItemCauseToItemDeletion()
+    {
+        //Arrange
+        var cartItems = _fixture.CreateMany<CartItem>().ToList();
+        var product = _fixture.Create<Product>();
+        cartItems.Add(new CartItem(
+            productId: product.Id,
+            unitPrice: product.Price,
+            quantity: 1));
+
+        var itemsCount = cartItems.Count;
+        var cart = new Cart(
+            buyerId: Guid.NewGuid(),
+            items: cartItems);
+
+        // Act
+        cart.RemoveItem(product, quantity: 1);
+
+        // Assert
+        cart.Items.Should().NotBeNull();
+        cart.Items.Count.Should().Be(itemsCount - 1);
+        cart.Items.Any(x => x.ProductId == product.Id).Should().BeFalse();
+    }
+
+    [Fact]
+    public void DeleteIgnoreUnexistingItem()
+    {
+        //Arrange
+        var cartItems = _fixture.CreateMany<CartItem>().ToList();
+        var itemsCount = cartItems.Count;
+        var cart = new Cart(
+            buyerId: Guid.NewGuid(),
+            items: cartItems);
+        var product = _fixture.Create<Product>();
+
+        // Act
+        cart.DeleteItem(product);
+
+        // Assert
+        cart.Items.Count.Should().Be(itemsCount);
+
+    }
+
+    [Fact]
+    public void DeleteItem()
+    {
+        //Arrange
+        var cartItems = _fixture.CreateMany<CartItem>().ToList();
+        var product = _fixture.Create<Product>();
+        cartItems.Add(new CartItem(
+            productId: product.Id,
+            unitPrice: product.Price,
+            quantity: 2));
+
+        var itemsCount = cartItems.Count;
+        var cart = new Cart(
+            buyerId: Guid.NewGuid(),
+            items: cartItems);
+
+        // Act
+        cart.DeleteItem(product);
+
+        // Assert
+        cart.Items.Should().NotBeNull();
+        cart.Items.Count.Should().Be(itemsCount - 1);
+        cart.Items.Any(x => x.ProductId == product.Id).Should().BeFalse();
     }
 
 }
