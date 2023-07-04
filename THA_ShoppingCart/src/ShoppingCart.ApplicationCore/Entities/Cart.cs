@@ -1,4 +1,5 @@
 ﻿using ShoppingCart.ApplicationCore.DomainEvents;
+using ShoppingCart.ApplicationCore.Enums;
 using ShoppingCart.ApplicationCore.Exceptions;
 using ShoppingCart.ApplicationCore.Primitives;
 using ShoppingCart.ApplicationCore.ValueObjects;
@@ -7,7 +8,7 @@ namespace ShoppingCart.ApplicationCore.Entities;
 
 public class Cart : AgregateRoot
 {
-    private const string DEFAULT_CURRENCY = "USD";
+    private const CurrencyCode DEFAULT_CURRENCY = CurrencyCode.USD;
     public Guid BuyerId { get; private set; }
 
     private readonly IList<CartItem> _items;

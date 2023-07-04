@@ -1,6 +1,7 @@
 ﻿using AutoFixture;
 using FluentAssertions;
 using ShoppingCart.ApplicationCore.Entities;
+using ShoppingCart.ApplicationCore.Enums;
 using ShoppingCart.ApplicationCore.ValueObjects;
 using Xunit;
 
@@ -36,7 +37,7 @@ public class CartItemTests
         var cartItem = new CartItem(
             id: Guid.NewGuid(),
             productId: Guid.NewGuid(),
-            unitPrice: new Money(14, "USD"),
+            unitPrice: new Money(14, CurrencyCode.USD),
             quantity: 2);
 
         // Act
@@ -53,7 +54,7 @@ public class CartItemTests
         var cartItem = new CartItem(
             id: Guid.NewGuid(),
             productId: Guid.NewGuid(),
-            unitPrice: new Money(14, "USD"),
+            unitPrice: new Money(14, CurrencyCode.USD),
             quantity: 1);
 
         // Act
