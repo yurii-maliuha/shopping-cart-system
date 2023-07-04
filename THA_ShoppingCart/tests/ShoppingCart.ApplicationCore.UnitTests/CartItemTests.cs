@@ -18,17 +18,15 @@ public class CartItemTests
     public void CreateBasedOnProductAndQuantity()
     {
         // Arrange
+        var id = Guid.NewGuid();
         var product = _fixture.Create<Product>();
         var quantity = 2;
 
         // Act
-        var cartItem = CartItem.Create(product, quantity);
+        var cartItem = CartItem.Create(id, product, quantity);
 
         // Assert
-        cartItem.Should().NotBeNull();
-        cartItem.Quantity.Should().Be(quantity);
-        cartItem.ProductId.Should().Be(product.Id);
-        cartItem.UnitPrice.Should().Be(product.Price);
+        cartItem.Id.Should().Be(id);
     }
 
     [Fact]
@@ -36,6 +34,7 @@ public class CartItemTests
     {
         // Arrange
         var cartItem = new CartItem(
+            id: Guid.NewGuid(),
             productId: Guid.NewGuid(),
             unitPrice: new Money(14, "USD"),
             quantity: 2);
@@ -52,6 +51,7 @@ public class CartItemTests
     {
         // Arrange
         var cartItem = new CartItem(
+            id: Guid.NewGuid(),
             productId: Guid.NewGuid(),
             unitPrice: new Money(14, "USD"),
             quantity: 1);

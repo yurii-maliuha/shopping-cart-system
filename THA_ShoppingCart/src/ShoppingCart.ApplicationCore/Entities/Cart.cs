@@ -1,4 +1,5 @@
 ﻿using ShoppingCart.ApplicationCore.DomainEvents;
+using ShoppingCart.ApplicationCore.Exceptions;
 using ShoppingCart.ApplicationCore.Primitives;
 using ShoppingCart.ApplicationCore.ValueObjects;
 
@@ -22,7 +23,8 @@ public class Cart : AgregateRoot
         }
     }
 
-    public Cart(Guid buyerId, IList<CartItem> items)
+    public Cart(Guid id, Guid buyerId, IList<CartItem> items)
+        : base(id)
     {
         BuyerId = buyerId;
         _items = items;
@@ -32,13 +34,13 @@ public class Cart : AgregateRoot
     {
         if (quantity < 1)
         {
-            throw new ArgumentOutOfRangeException("The quantity parameter should be greater or equal to 1");
+            throw new InvalidQuantityValueOfCartItemsDomainException($"The {nameof(quantity)} parameter should be greater or equal to 1");
         }
 
         CartItem addedItem;
         if (!_items.Any(i => i.ProductId == product.Id))
         {
-            addedItem = CartItem.Create(product, quantity: 1);
+            addedItem = CartItem.Create(Guid.NewGuid(), product, quantity: 1);
             _items.Add(addedItem);
             return;
         }
@@ -52,7 +54,7 @@ public class Cart : AgregateRoot
     {
         if (quantity < 1)
         {
-            throw new ArgumentOutOfRangeException("The quantity parameter should be greater or equal to 1");
+            throw new InvalidQuantityValueOfCartItemsDomainException($"The {nameof(quantity)} parameter should be greater or equal to 1");
         }
 
         var itemToRemove = UpdateItem(product, -quantity);
@@ -67,7 +69,7 @@ public class Cart : AgregateRoot
         var itemToUpdate = Items.FirstOrDefault(i => i.ProductId == product.Id);
         if (itemToUpdate is null)
         {
-            throw new ArgumentNullException("Item can not be undefined for this operation");
+            throw new NotFoundCartItemOnUpdateDomainException("Item can not be undefined for this operation");
         }
 
         itemToUpdate.AddQuantity(quantity);

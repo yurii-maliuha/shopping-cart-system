@@ -3,8 +3,8 @@
 public abstract class AgregateRoot : Entity
 {
     private readonly IList<IDomainEvent> _domainEvents = new List<IDomainEvent>();
-    protected AgregateRoot()
-        : base()
+    protected AgregateRoot(Guid id)
+        : base(id)
     {
 
     }

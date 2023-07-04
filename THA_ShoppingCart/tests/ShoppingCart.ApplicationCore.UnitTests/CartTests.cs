@@ -1,6 +1,7 @@
 ﻿using AutoFixture;
 using FluentAssertions;
 using ShoppingCart.ApplicationCore.Entities;
+using ShoppingCart.ApplicationCore.Exceptions;
 using Xunit;
 
 namespace ShoppingCart.ApplicationCore.UnitTests;
@@ -26,7 +27,7 @@ public class CartTests
         Action action = () => cart.AddItem(product, invalidQuantity);
 
         // Assert
-        action.Should().Throw<ArgumentException>();
+        action.Should().Throw<InvalidQuantityValueOfCartItemsDomainException>();
     }
 
     [Fact]
@@ -36,6 +37,7 @@ public class CartTests
         var cartItems = _fixture.CreateMany<CartItem>().ToList();
         var itemsCount = cartItems.Count;
         var cart = new Cart(
+            id: Guid.NewGuid(),
             buyerId: Guid.NewGuid(),
             items: cartItems);
         var product = _fixture.Create<Product>();
@@ -56,12 +58,14 @@ public class CartTests
         var cartItems = _fixture.CreateMany<CartItem>().ToList();
         var product = _fixture.Create<Product>();
         cartItems.Add(new CartItem(
+            id: Guid.NewGuid(),
             productId: product.Id,
             unitPrice: product.Price,
             quantity: 1));
 
         var itemsCount = cartItems.Count;
         var cart = new Cart(
+            id: Guid.NewGuid(),
             buyerId: Guid.NewGuid(),
             items: cartItems);
 
@@ -80,6 +84,7 @@ public class CartTests
         //Arrange
         var cartItems = _fixture.CreateMany<CartItem>().ToList();
         var cart = new Cart(
+            id: Guid.NewGuid(),
             buyerId: Guid.NewGuid(),
             items: cartItems);
         var product = _fixture.Create<Product>();
@@ -88,7 +93,7 @@ public class CartTests
         Action action = () => cart.RemoveItem(product);
 
         // Assert
-        action.Should().Throw<ArgumentNullException>();
+        action.Should().Throw<NotFoundCartItemOnUpdateDomainException>();
     }
 
     [Fact]
@@ -98,12 +103,14 @@ public class CartTests
         var cartItems = _fixture.CreateMany<CartItem>().ToList();
         var product = _fixture.Create<Product>();
         cartItems.Add(new CartItem(
+            id: Guid.NewGuid(),
             productId: product.Id,
             unitPrice: product.Price,
             quantity: 3));
 
         var itemsCount = cartItems.Count;
         var cart = new Cart(
+            id: Guid.NewGuid(),
             buyerId: Guid.NewGuid(),
             items: cartItems);
 
@@ -124,12 +131,14 @@ public class CartTests
         var cartItems = _fixture.CreateMany<CartItem>().ToList();
         var product = _fixture.Create<Product>();
         cartItems.Add(new CartItem(
+            id: Guid.NewGuid(),
             productId: product.Id,
             unitPrice: product.Price,
             quantity: 1));
 
         var itemsCount = cartItems.Count;
         var cart = new Cart(
+            id: Guid.NewGuid(),
             buyerId: Guid.NewGuid(),
             items: cartItems);
 
@@ -149,6 +158,7 @@ public class CartTests
         var cartItems = _fixture.CreateMany<CartItem>().ToList();
         var itemsCount = cartItems.Count;
         var cart = new Cart(
+            id: Guid.NewGuid(),
             buyerId: Guid.NewGuid(),
             items: cartItems);
         var product = _fixture.Create<Product>();
@@ -168,12 +178,14 @@ public class CartTests
         var cartItems = _fixture.CreateMany<CartItem>().ToList();
         var product = _fixture.Create<Product>();
         cartItems.Add(new CartItem(
+            id: Guid.NewGuid(),
             productId: product.Id,
             unitPrice: product.Price,
             quantity: 2));
 
         var itemsCount = cartItems.Count;
         var cart = new Cart(
+            id: Guid.NewGuid(),
             buyerId: Guid.NewGuid(),
             items: cartItems);
 

@@ -14,8 +14,8 @@ public class Product : Entity
     public Size Size { get; init; }
 
     public Product(Guid id, string name, string description, string band, string category, Money price, Size size)
+        : base(id)
     {
-        Id = id;
         Name = name;
         Description = description;
         Band = band;
