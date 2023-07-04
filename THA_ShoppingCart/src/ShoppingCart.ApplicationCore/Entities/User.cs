@@ -1,6 +1,8 @@
-﻿namespace ShoppingCart.ApplicationCore.Entities;
+﻿using ShoppingCart.ApplicationCore.Primitives;
 
-public class User : BaseEntity
+namespace ShoppingCart.ApplicationCore.Entities;
+
+public class User : Entity
 {
     public string FullName { get; private set; }
     public string Email { get; set; }

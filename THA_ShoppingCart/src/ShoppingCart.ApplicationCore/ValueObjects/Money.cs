@@ -1,4 +1,4 @@
-﻿namespace ShoppingCart.ApplicationCore.ValueTypes;
+﻿namespace ShoppingCart.ApplicationCore.ValueObjects;
 
 public record Money
 {

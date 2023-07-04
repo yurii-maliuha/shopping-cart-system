@@ -1,7 +1,7 @@
 ﻿using AutoFixture;
 using FluentAssertions;
 using ShoppingCart.ApplicationCore.Entities;
-using ShoppingCart.ApplicationCore.ValueTypes;
+using ShoppingCart.ApplicationCore.ValueObjects;
 using Xunit;
 
 namespace ShoppingCart.ApplicationCore.UnitTests;

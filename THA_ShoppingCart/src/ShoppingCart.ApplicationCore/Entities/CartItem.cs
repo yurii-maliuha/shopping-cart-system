@@ -1,8 +1,9 @@
-﻿using ShoppingCart.ApplicationCore.ValueTypes;
+﻿using ShoppingCart.ApplicationCore.Primitives;
+using ShoppingCart.ApplicationCore.ValueObjects;
 
 namespace ShoppingCart.ApplicationCore.Entities;
 
-public class CartItem : BaseEntity
+public class CartItem : Entity
 {
     public Guid ProductId { get; private set; }
     public Money UnitPrice { get; set; }

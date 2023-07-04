@@ -186,4 +186,18 @@ public class CartTests
         cart.Items.Any(x => x.ProductId == product.Id).Should().BeFalse();
     }
 
+    [Fact]
+    public void ClearCart()
+    {
+        //Arrange
+        var cart = _fixture.Create<Cart>();
+
+        // Act
+        cart.Clear();
+
+        // Arrange
+        cart.Items.Count.Should().Be(0);
+    }
+
+
 }

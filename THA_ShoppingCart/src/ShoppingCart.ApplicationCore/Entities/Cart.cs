@@ -1,9 +1,10 @@
-﻿using ShoppingCart.ApplicationCore.Interfaces;
-using ShoppingCart.ApplicationCore.ValueTypes;
+﻿using ShoppingCart.ApplicationCore.DomainEvents;
+using ShoppingCart.ApplicationCore.Primitives;
+using ShoppingCart.ApplicationCore.ValueObjects;
 
 namespace ShoppingCart.ApplicationCore.Entities;
 
-public class Cart : IAgregateRoot
+public class Cart : AgregateRoot
 {
     private const string DEFAULT_CURRENCY = "USD";
     public Guid BuyerId { get; private set; }
@@ -34,15 +35,17 @@ public class Cart : IAgregateRoot
             throw new ArgumentOutOfRangeException("The quantity parameter should be greater or equal to 1");
         }
 
+        CartItem addedItem;
         if (!_items.Any(i => i.ProductId == product.Id))
         {
-            _items.Add(CartItem.Create(product, quantity: 1));
+            addedItem = CartItem.Create(product, quantity: 1);
+            _items.Add(addedItem);
             return;
         }
 
-        UpdateItem(product, quantity);
+        addedItem = UpdateItem(product, quantity);
 
-        //TODO publish CartItemAdded
+        RaiseDomainEvent(new CartItemAddedDomainEvent(CartItemId: addedItem.Id, CartId: Id));
     }
 
     public void RemoveItem(Product product, int quantity = 1)
@@ -78,14 +81,15 @@ public class Cart : IAgregateRoot
         {
             _items.Remove(itemToDelete);
 
-            //TODO publish CartItemDeleted
+            RaiseDomainEvent(new CartItemDeletedDomainEvent(CartItemId: itemToDelete.Id, CartId: Id));
         }
     }
 
     public void Clear()
     {
         _items.Clear();
-        //TODO publish CartItemCleared
+
+        RaiseDomainEvent(new CartClearedDomainEvent(CartId: Id));
     }
 
 
