@@ -7,7 +7,7 @@ using Xunit;
 
 namespace ShoppingCart.ApplicationCore.UnitTests;
 
-public class AddItemCartTests
+public class AddItemShoppingCartTests
 {
     [Fact]
     public void AddItemForInvalidQuantityThrowsException()
@@ -15,7 +15,7 @@ public class AddItemCartTests
         // Arrange
         var invalidQuantity = 0;
         var product = Fixture.Create(new ProductCreator());
-        var cart = Fixture.Create(new CartCreator());
+        var cart = Fixture.Create(new ShoppingCartCreator());
 
         // Act
         Action action = () => cart.AddItem(product, invalidQuantity);
@@ -28,9 +28,9 @@ public class AddItemCartTests
     public void AddItemForANewItem()
     {
         //Arrange
-        var cartItems = Fixture.CreateMany(3, new CartItemCreator());
+        var cartItems = Fixture.CreateMany(3, new ShoppingCartItemCreator());
         var itemsCount = cartItems.Count;
-        var cart = new Cart(
+        var cart = new Entities.ShoppingCart(
             id: Guid.NewGuid(),
             buyerId: Guid.NewGuid(),
             items: cartItems);
@@ -51,16 +51,16 @@ public class AddItemCartTests
     public void AddItemForTheExistingItem()
     {
         //Arrange
-        var cartItems = Fixture.CreateMany(3, new CartItemCreator());
+        var cartItems = Fixture.CreateMany(3, new ShoppingCartItemCreator());
         var product = Fixture.Create(new ProductCreator());
-        cartItems.Add(new CartItem(
+        cartItems.Add(new ShoppingCartItem(
             id: Guid.NewGuid(),
             productId: product.Id,
             unitPrice: product.Price,
             quantity: 1));
 
         var itemsCount = cartItems.Count;
-        var cart = new Cart(
+        var cart = new Entities.ShoppingCart(
             id: Guid.NewGuid(),
             buyerId: Guid.NewGuid(),
             items: cartItems);

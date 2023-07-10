@@ -2,6 +2,6 @@
 
 namespace ShoppingCart.ApplicationCore.DomainEvents;
 
-public sealed record CartClearedDomainEvent(Guid CartId) : IDomainEvent
+public sealed record ShoppingCartItemDeletedDomainEvent(Guid CartItemId, Guid CartId) : IDomainEvent
 {
 }

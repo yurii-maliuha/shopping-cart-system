@@ -7,7 +7,7 @@ using Xunit;
 
 namespace ShoppingCart.ApplicationCore.UnitTests;
 
-public class CartItemTests
+public class ShoppingCartItemTests
 {
     [Fact]
     public void CreateBasedOnProductAndQuantity()
@@ -18,7 +18,7 @@ public class CartItemTests
         var quantity = 2;
 
         // Act
-        var cartItem = CartItem.Create(id, product, quantity);
+        var cartItem = ShoppingCartItem.Create(id, product, quantity);
 
         // Assert
         cartItem.Id.Should().Be(id);
@@ -28,7 +28,7 @@ public class CartItemTests
     public void AddQuantity()
     {
         // Arrange
-        var cartItem = new CartItem(
+        var cartItem = new ShoppingCartItem(
             id: Guid.NewGuid(),
             productId: Guid.NewGuid(),
             unitPrice: new Money(14, CurrencyCode.USD),
@@ -45,7 +45,7 @@ public class CartItemTests
     public void SetQuantity()
     {
         // Arrange
-        var cartItem = new CartItem(
+        var cartItem = new ShoppingCartItem(
             id: Guid.NewGuid(),
             productId: Guid.NewGuid(),
             unitPrice: new Money(14, CurrencyCode.USD),

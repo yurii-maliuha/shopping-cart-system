@@ -6,14 +6,14 @@ using Xunit;
 
 namespace ShoppingCart.ApplicationCore.UnitTests;
 
-public class RemoveItemCartTests
+public class RemoveItemShoppingCartTests
 {
     [Fact]
     public void RemoveUnexistingItemThrowsException()
     {
         //Arrange
-        var cartItems = Fixture.CreateMany(3, new CartItemCreator());
-        var cart = new Cart(
+        var cartItems = Fixture.CreateMany(3, new ShoppingCartItemCreator());
+        var cart = new Entities.ShoppingCart(
             id: Guid.NewGuid(),
             buyerId: Guid.NewGuid(),
             items: cartItems);
@@ -30,16 +30,16 @@ public class RemoveItemCartTests
     public void RemoveItemsUpdateQuantity()
     {
         //Arrange
-        var cartItems = Fixture.CreateMany(3, new CartItemCreator());
+        var cartItems = Fixture.CreateMany(3, new ShoppingCartItemCreator());
         var product = Fixture.Create(new ProductCreator());
-        cartItems.Add(new CartItem(
+        cartItems.Add(new ShoppingCartItem(
             id: Guid.NewGuid(),
             productId: product.Id,
             unitPrice: product.Price,
             quantity: 3));
 
         var itemsCount = cartItems.Count;
-        var cart = new Cart(
+        var cart = new Entities.ShoppingCart(
             id: Guid.NewGuid(),
             buyerId: Guid.NewGuid(),
             items: cartItems);
@@ -61,16 +61,16 @@ public class RemoveItemCartTests
     public void RemoveItemCauseToItemDeletion()
     {
         //Arrange
-        var cartItems = Fixture.CreateMany(3, new CartItemCreator());
+        var cartItems = Fixture.CreateMany(3, new ShoppingCartItemCreator());
         var product = Fixture.Create(new ProductCreator());
-        cartItems.Add(new CartItem(
+        cartItems.Add(new ShoppingCartItem(
             id: Guid.NewGuid(),
             productId: product.Id,
             unitPrice: product.Price,
             quantity: 1));
 
         var itemsCount = cartItems.Count;
-        var cart = new Cart(
+        var cart = new Entities.ShoppingCart(
             id: Guid.NewGuid(),
             buyerId: Guid.NewGuid(),
             items: cartItems);

@@ -5,15 +5,15 @@ using Xunit;
 
 namespace ShoppingCart.ApplicationCore.UnitTests;
 
-public class DeleteItemCartTests
+public class DeleteItemShoppingCartTests
 {
     [Fact]
     public void DeleteIgnoreUnexistingItem()
     {
         //Arrange
-        var cartItems = Fixture.CreateMany(3, new CartItemCreator());
+        var cartItems = Fixture.CreateMany(3, new ShoppingCartItemCreator());
         var itemsCount = cartItems.Count;
-        var cart = new Cart(
+        var cart = new Entities.ShoppingCart(
             id: Guid.NewGuid(),
             buyerId: Guid.NewGuid(),
             items: cartItems);
@@ -31,16 +31,16 @@ public class DeleteItemCartTests
     public void DeleteItem()
     {
         //Arrange
-        var cartItems = Fixture.CreateMany(3, new CartItemCreator());
+        var cartItems = Fixture.CreateMany(3, new ShoppingCartItemCreator());
         var product = Fixture.Create(new ProductCreator());
-        cartItems.Add(new CartItem(
+        cartItems.Add(new ShoppingCartItem(
             id: Guid.NewGuid(),
             productId: product.Id,
             unitPrice: product.Price,
             quantity: 2));
 
         var itemsCount = cartItems.Count;
-        var cart = new Cart(
+        var cart = new Entities.ShoppingCart(
             id: Guid.NewGuid(),
             buyerId: Guid.NewGuid(),
             items: cartItems);

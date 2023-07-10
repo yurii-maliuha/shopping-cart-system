@@ -6,13 +6,13 @@ using ShoppingCart.ApplicationCore.ValueObjects;
 
 namespace ShoppingCart.ApplicationCore.Entities;
 
-public class Cart : AgregateRoot
+public class ShoppingCart : AgregateRoot
 {
     private const CurrencyCode DEFAULT_CURRENCY = CurrencyCode.USD;
     public Guid BuyerId { get; private set; }
 
-    private readonly IList<CartItem> _items;
-    public IReadOnlyCollection<CartItem> Items => _items.AsReadOnly();
+    private readonly IList<ShoppingCartItem> _items;
+    public IReadOnlyCollection<ShoppingCartItem> Items => _items.AsReadOnly();
 
     public Money Total
     {
@@ -25,7 +25,7 @@ public class Cart : AgregateRoot
         }
     }
 
-    public Cart(Guid id, Guid buyerId, IList<CartItem> items)
+    public ShoppingCart(Guid id, Guid buyerId, IList<ShoppingCartItem> items)
         : base(id)
     {
         BuyerId = buyerId;
@@ -39,17 +39,17 @@ public class Cart : AgregateRoot
             throw new InvalidQuantityValueOfCartItemsDomainException($"The {nameof(quantity)} parameter should be greater or equal to 1");
         }
 
-        CartItem addedItem;
+        ShoppingCartItem addedItem;
         if (!_items.Any(i => i.ProductId == product.Id))
         {
-            addedItem = CartItem.Create(Guid.NewGuid(), product, quantity: 1);
+            addedItem = ShoppingCartItem.Create(Guid.NewGuid(), product, quantity: 1);
             _items.Add(addedItem);
             return;
         }
 
         addedItem = UpdateItem(product, quantity);
 
-        RaiseDomainEvent(new CartItemAddedDomainEvent(CartItemId: addedItem.Id, CartId: Id));
+        RaiseDomainEvent(new ShoppingCartItemAddedDomainEvent(CartItemId: addedItem.Id, CartId: Id));
     }
 
     public void RemoveItem(Product product, int quantity = 1)
@@ -66,7 +66,7 @@ public class Cart : AgregateRoot
         }
     }
 
-    private CartItem UpdateItem(Product product, int quantity)
+    private ShoppingCartItem UpdateItem(Product product, int quantity)
     {
         var itemToUpdate = Items.FirstOrDefault(i => i.ProductId == product.Id);
         if (itemToUpdate is null)
@@ -85,7 +85,7 @@ public class Cart : AgregateRoot
         {
             _items.Remove(itemToDelete);
 
-            RaiseDomainEvent(new CartItemDeletedDomainEvent(CartItemId: itemToDelete.Id, CartId: Id));
+            RaiseDomainEvent(new ShoppingCartItemDeletedDomainEvent(CartItemId: itemToDelete.Id, CartId: Id));
         }
     }
 
@@ -93,8 +93,6 @@ public class Cart : AgregateRoot
     {
         _items.Clear();
 
-        RaiseDomainEvent(new CartClearedDomainEvent(CartId: Id));
+        RaiseDomainEvent(new ShoppingCartClearedDomainEvent(CartId: Id));
     }
-
-
 }

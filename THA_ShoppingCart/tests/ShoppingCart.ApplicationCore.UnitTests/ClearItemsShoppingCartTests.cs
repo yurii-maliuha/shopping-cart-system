@@ -4,13 +4,13 @@ using Xunit;
 
 namespace ShoppingCart.ApplicationCore.UnitTests;
 
-public class ClearItemsCartTests
+public class ClearItemsShoppingCartTests
 {
     [Fact]
     public void ClearCart()
     {
         //Arrange
-        var cart = Fixture.Create(new CartCreator());
+        var cart = Fixture.Create(new ShoppingCartCreator());
 
         // Act
         cart.Clear();

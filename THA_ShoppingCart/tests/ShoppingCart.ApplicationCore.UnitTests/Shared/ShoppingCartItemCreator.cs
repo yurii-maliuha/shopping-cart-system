@@ -2,18 +2,18 @@
 
 namespace ShoppingCart.ApplicationCore.UnitTests.Shared;
 
-public class CartItemCreator : ITestDataCreator<CartItem>
+public class ShoppingCartItemCreator : ITestDataCreator<ShoppingCartItem>
 {
     private MoneyCreator _moneyCreator;
-    public CartItemCreator()
+    public ShoppingCartItemCreator()
     {
         _moneyCreator = new MoneyCreator();
     }
 
-    public CartItem Create(int index)
+    public ShoppingCartItem Create(int index)
     {
         Random random = new Random();
-        return new CartItem(
+        return new ShoppingCartItem(
             id: Guid.NewGuid(),
             productId: Guid.NewGuid(),
             unitPrice: _moneyCreator.Create(index),
